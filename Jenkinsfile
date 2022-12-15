@@ -9,16 +9,12 @@ node {
        sh 'mvn clean install'
      }
    }
-   stage('SonarScan') {
-      //withSonarQubeEnv('SonarQube') {
-         withMaven(jdk: 'JDK-1.8', maven: 'Maven-3.6.1') {
-             //sh 'mvn clean package sonar:sonar' 
-             sh 'mvn org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar' +
-             ' -Dsonar.host.url=https://sonarcloud.io '+
-             ' -Dsonar.organization=itrainavengers '+ 
-             ' -Dsonar.login=c1f3a8036d378aacc1f6e6e2fc6dcd7de2ebae5d '   
-         //}
-      }
+   stage('SonarQube Analysis') {
+    def mvn = tool 'Default Maven';
+    withSonarQubeEnv() {
+      sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=maven"
+     }
+    }
    }
    stage('Artifacts') {
        echo 'package the project artifacts..'
