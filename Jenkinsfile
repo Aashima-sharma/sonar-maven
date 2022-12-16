@@ -5,13 +5,13 @@ node {
    }
    stage('Build Test & Package') {
       echo 'Build the package'
-      withMaven(jdk: 'latest', maven: 'Maven-3.6.1') {
+      //withMaven(jdk: 'latest', maven: 'Maven-3.6.1') {
        sh 'mvn clean install'
-     }
+    // }
    }
    stage('SonarScan') {
-      //withSonarQubeEnv('SonarQube') {
-         withMaven(jdk: 'latest', maven: 'Maven-3.6.1') {
+      withSonarQubeEnv('SonarQube') {
+         //withMaven(jdk: 'latest', maven: 'Maven-3.6.1') {
              //sh 'mvn clean package sonar:sonar' 
              sh 'mvn org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar' +
              ' -Dsonar.host.url=https://sonarcloud.io '+
@@ -22,9 +22,9 @@ node {
    }
    stage('Artifacts') {
        echo 'package the project artifacts..'
-       withMaven(jdk: 'latest', maven: 'Maven-3.6.1') {
+       //withMaven(jdk: 'latest', maven: 'Maven-3.6.1') {
        sh 'mvn package'
-     }
+    // }
    
    }
    stage('Deploy to Dev'){
